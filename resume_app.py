@@ -47,48 +47,61 @@ st.write("""
                 
         I am a Data Scientist who is enthusiastic about learning new technologies
         and adapting to innovations in the field. 
-                
-        I believe that data is a tool that is drastically improving the world
-        and I am always thrilled to participate in the process of bringing data
-        to life.
-                
-        For me, all of the facets of machine learning are vital arrows in the 
-        quiver of buisiness problem solving.
-                
-        I am firm believer in hard work and I persistently strive to produce meaningful 
-        results that are thorough, reproducible, and built from an adequate mathematical
+
+        All of the facets of machine learning are vital arrows in the 
+        quiver of buisiness problem solving. Data is a tool drastically 
+        improving the world and I am thrilled to participate in bringing 
+        data to life.
+                        
+        With firm belief in hard work, I persistently strive to produce meaningful, 
+        thorough, and reproducible results built from an adequate mathematical
         foundation. 
 
-        Another belief I hold is that communication is an essential component in the data science 
-        process and I think there is little value in insights derived from data if these insights
-        are not properly communicated.
+        Furthermore, I hold communication as essential in the data science 
+        process and there is little value in improperly communicated insights derived from data.
 
-        When I am not working I love to get to outdoors as much as possible, whether that is in my 
-        backyard or the on other side of the world I am indifferent; however, I certainly cherish 
-        the occassional departure from the continental shelf I call home. 
+        Beyond my interests as a data scientist the outdoors, cooking, and travelling are an 
+        important part of who I am.
                 
         """)
 
 #education graph
 st.header("Education")
-#load in education graph data
+#load education graph data
 tdi_data = undill_it('resume_data/tdi_data.dll')
 fau_data = undill_it('resume_data/fau_data.dll')
-#generate education treemap
+#generate education_treemap
 edu_graph = education_treemap(tdi_data, fau_data)
 st.plotly_chart(edu_graph)
 
 #Describe Tutoring Role and Timeframe
 st.subheader("Mathematics Tutor at Florida Atlantic University")
-st.write("Add Bulleted Description Here")
+st.write("""
+        Courses Tutored: Matrix Theory, Introduction to Statistics, 
+        Calculus 1,2 & 3, and Differential Equations
+
+        While tutoring students from nontechnical backgrounds I found success in
+        looking for applications of the pertinant material in the real world to help 
+        motivate learning of the material.
+
+        Duration: 2 years
+        """)
 
 #Describe Volunteer Role at Computational Chemistry Lab
 st.subheader("Computational Chemistry Laboratory Volunteer")
-st.write("Add Description of what I did here")
+st.write("""
+        Performed least squares optimization (analytically) using SVD in a Linux environment to project data points 
+        onto a best-fit plane in 3-D. As a result, enabled better assessment of molecular interactions in the dynamic model.
+
+        Duration: Summer Volunteer (3 months)
+        """)
 
 #internship graph
 st.header("Internship")
-#load in internship graph data
+st.write("""
+        Click 'Build Graph' to build the visualization and then hover over each data point to view the corresponding information.
+        """)
+#load internship graph data
 intern_data = undill_it('resume_data/intern_data.dll')
 intern_pos_dict = undill_it('resume_data/intern_pos_dict.dll')
 #generate animated_intern_graph
@@ -107,30 +120,39 @@ st.write("""
         """)
         
 st.link_button("View Paper: Spatiotemporal Determinants of Football Stadium Incidents",
-               "https://github.com/jrw34/ThesisJW_PDF/blob/main/JW_Thesis_pdf2.pdf") #make this bigger!
+               "https://github.com/jrw34/ThesisJW_PDF/blob/main/JW_Thesis_pdf2.pdf")
 
 #skills graph
 st.header("Skills")
-#load in skills graph data
+#load skills graph data
 skills_df = undill_it('resume_data/skills_df.dll')
 #generate skills_graph
 skill_graph = skills_graph(skills_df)
 st.plotly_chart(skill_graph)
 
-#Describe Capstone Project with each image
+#Capstone Project 
 st.header("Ingredient Identifier")
 st.subheader("Capstone Project For The Data Incubator Fellowship Program")
-#display images from capstone project --> wrap in buttons with corresponding descriptions
-st.write("Add Project Description Here")
-if st.button("Ingredient Identifier: Input"):
+#display images from capstone project
+st.write("""
+        Describe Data
+        
+        Describe Cleaning the Data (Regex, parsing, removing phrases like 'Contains'
+        
+        Describe Establishing Data Base
+        
+        Describe use of sqlalchemy
+        
+        Describe Building the graph to display perfect matches
+        """)
+
+capstone_toggler = st.toggle("Display Capstone Project")
+if capstone_toggler:
+    st.write("Input Food Item")
     st.image('imgs/cap_proj_1.png')
-
-st.write("Explain Select Boxes and Importance of Caching Data pulled from Postgres DB")
-if st.button("Ingredient Identifier: Select Features"):
+    st.write("Select Desired Features")
     st.image('imgs/cap_proj_2.png')
-
-st.write("Explain custom graph and why I thought it was important to display the data in this fashion")
-if st.button("Ingredient Identifier: Display Query Results"):
+    st.write("Display Query Results")
     st.image('imgs/cap_proj_3.png')
 
 st.write("""Data Source:
@@ -141,18 +163,18 @@ st.write("""Data Source:
 
 #Embed emotion classification spark model
 st.header("pySpark Text Classification Model")
-st.subheader("Here is a fun emotion classifier I built using spark because I think it is a great framework for NLP classification tasks")
+st.subheader("Here is a simple emotion classifier I built using spark because I think it is a great framework for NLP classification tasks")
 st.write("""        
-        Building this model I had to walk the line between overfitting based on single words. It has proven quite easy to trick the model
+        Building this model I had to walk the line of overfitting based on single words. It has proven quite easy to trick the model
         with oxymoronic input. The training data also elucidates the complexity of language and the dangers of 
-        restricting human behavior to oversimplified descriptions like speech only being categorically confined to 6 emotions.
+        restricting human behavior to oversimplified descriptions (speech only being categorically confined to 6 emotions).
 
-        The model performance was 90% and the most important parameter was document frequency count in the processing step,
-        this was a great reminder of the age old adage 'garbage in garbage out' because despite pulling all of the levers of the logistic
-        regression model (which performed better than 4 other models), the accuracy was limited by how the text was preprocessed.
+        The model performed with 90% accuracy on the training data and the most important parameter was document frequency count in the 
+        processing step. This was a great reminder of the age old adage 'garbage in garbage out' because despite pulling all of the levers of 
+        the logistic regression model (which performed better than 4 other models), the accuracy was limited by how the text was preprocessed.
         Another apparent shortcoming of the model is the inability to classify surprise without the presence of explicit surprise 
-        related keyword in the text. This is likely due to the descrepency between the number of training labels associated with surprise
-        which had only 15,000 labels to train on compared to all other labels with at least four times as many training cases.
+        related keywords in the text. This is likely due to the descrepency between the number of training labels associated with surprise
+        which had approximately 15,000 labels compared to all other labels with at least four times as many for training.
 
         The model sometimes performs surprisingly well with more abstract emotional expressions,
         here are some examples of this abstract metaphoric classification: 
@@ -169,11 +191,11 @@ st.write("""
 
         "Is it possible to do that" = surprise
 
-        
         """)
 
 #describe input format
-st.write("""Input any sentence to see how this model holds up, the more abstract the more suprising the model will behave, 
+st.write("""
+            Input any sentence to see how this model holds up, the more abstract the more suprising the model will behave, 
             sometimes favorably and sometimes far less favorably.
             """)
 
@@ -182,17 +204,17 @@ st.write("""Input any sentence to see how this model holds up, the more abstract
 #load sqlContext
 sqlContext = create_spark_instance()
 
+#load lrModel
+lrModel = load_lrModel("lrModel_emotions.model")
+
+#load fitPipeline
+fitPipeline = load_pipeline("lrModel_transformation_pipe")
+
 #user input
 input_text = st.text_input("Input sentence here")
 
 if input_text:
-    st.write(input_text)
-    
-    #load lrModel
-    lrModel = load_lrModel("lrModel_emotions.model")
-
-    #load fitPipeline
-    fitPipeline = load_pipeline("lrModel_transformation_pipe")
+    st.write(f"User Input: {input_text}")
 
     #classify_text
     classifier_pred = classify_input(input_text, sqlContext, fitPipeline, lrModel)
@@ -202,26 +224,18 @@ st.write("""
 
         Data Source: 
         
-            @inproceedings{saravia-etal-2018-carer,
-        
-            title = "{CARER}: Contextualized Affect Representations for Emotion Recognition",
-        
+            @inproceedings{saravia-etal-2018-carer,\n
+            title = "{CARER}: Contextualized Affect Representations for Emotion Recognition",\n
             author = "Saravia, Elvis  and Liu, Hsien-Chi Toby  and Huang, Yen-Hao 
-                        and Wu, Junlin  and Chen, Yi-Shin",
-            booktitle = "Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing",
-        
-            month = oct # "-" # nov, year = "2018",
-        
-            address = "Brussels, Belgium",
-        
-            publisher = "Association for Computational Linguistics",
-        
-            url = "https://www.aclweb.org/anthology/D18-1404",
-        
-            doi = "10.18653/v1/D18-1404",
-        
-            pages = "3687--3697",
-    
+                        and Wu, Junlin  and Chen, Yi-Shin",\n 
+            booktitle = "Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing",\n
+            month = oct # "-" # nov, year = "2018",\n
+            address = "Brussels, Belgium",\n
+            publisher = "Association for Computational Linguistics",\n
+            url = "https://www.aclweb.org/anthology/D18-1404",\n
+            doi = "10.18653/v1/D18-1404",\n
+            pages = "3687--3697",\n
+            
             abstract = "Emotions are expressed in nuanced ways, which varies by collective or individual experiences, knowledge, and beliefs. 
             Therefore, to understand emotion, as conveyed through text, a robust mechanism capable of capturing and modeling different 
             linguistic nuances and phenomena is needed. We propose a semi-supervised, graph-based algorithm to produce rich structural 
@@ -232,6 +246,18 @@ st.write("""
         """)
 
     
-
-
+#Add ssesction about process of building the site
+st.header("How I built this")
+st.write("""
+        add some fun stuff I did while building this project
+        
+        talk about add java to packages.txt
+        
+        talk about embedding autoscroll anchors in markdown sections
+        
+        talk about building the animation
+        
+        talk about adding download button for pdf ... mime data
+        
+        """)
 
