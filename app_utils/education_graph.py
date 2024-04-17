@@ -2,13 +2,13 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 #def function to return plotly figure displaying Treemap containing education data
-def education_treemap(tdi_data, fau_data): #add in sector color spefications to function args ... maybe kwargs
+def education_treemap(tdi_data, fau_data, color_1, color_2, sector_bg_color, sector_font_color):
     #create subplot template
     education_trees = make_subplots(
         cols = 2, 
         rows = 1,
         column_widths = [0.4, 0.6],
-        subplot_titles = ('<b>The Data Incubator<b>', '<b>Florida Atlantic University<b>'),
+        subplot_titles = ('The Data Incubator', 'Florida Atlantic University'),
         specs = [[{'type' : 'treemap', 'rowspan' : 1}, {'type': 'treemap'}]]
                                 )\
                         .add_trace(go.Treemap( #add TDI trace to subplot figure
@@ -19,7 +19,10 @@ def education_treemap(tdi_data, fau_data): #add in sector color spefications to 
                     insidetextfont = dict(size = 15),
                     outsidetextfont = dict(size = 25),
                     hoverinfo = 'skip',
-                    marker_colors = ['lightgray'] + ['lightgreen','blue']*2),
+                    marker_colors = [sector_bg_color] + [color_1, color_2]*2,
+                    textfont=dict(
+                                size=18,
+                                color=sector_font_color)),
                     row = 1, 
                     col = 1)\
                         .add_trace(go.Treemap( #add FAU trace to subplot figure
@@ -30,10 +33,13 @@ def education_treemap(tdi_data, fau_data): #add in sector color spefications to 
                     hoverinfo = 'skip',
                     insidetextfont = dict(size = 15),
                     outsidetextfont = dict(size = 25),
-                    marker_colors = ['lightgray'] + ['blue', 'red']*3),
+                    marker_colors = [sector_bg_color] + [color_1, color_2]*3,
+                    textfont=dict(
+                                size=18,
+                                color=sector_font_color)),
                     row = 1, 
                     col = 2)\
-                        .update_annotations(yshift=20, font_size = 28) #set titles above figures to create more space and increase font
+                        .update_annotations(yshift=20, font_size = 28, font_color = 'black')
     
     #return plotly figure object
     return education_trees
