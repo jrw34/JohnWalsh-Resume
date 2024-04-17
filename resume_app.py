@@ -37,6 +37,8 @@ with st.container():
                 [Capstone Project for The Data Incubator](#ingredient-identifier)
             
                 [pySpark Text Classification Model](#pyspark-text-classification-model)
+
+                [How I Built This](#how-i-built-this)
             
                 """)
     col_2.image("imgs/headshot.png")
@@ -71,7 +73,10 @@ st.header("Education")
 tdi_data = undill_it('resume_data/tdi_data.dll')
 fau_data = undill_it('resume_data/fau_data.dll')
 #generate education_treemap
-edu_graph = education_treemap(tdi_data, fau_data)
+edu_graph = education_treemap(tdi_data, fau_data, 
+                              color_1 = '#94E3FE', color_2 = '#FFC677', 
+                              sector_bg_color = '#D4E3FE', 
+                              sector_font_color = '#1A0A53')
 st.plotly_chart(edu_graph)
 
 #Describe Tutoring Role and Timeframe
@@ -134,17 +139,64 @@ st.plotly_chart(skill_graph)
 st.header("Ingredient Identifier")
 st.subheader("Capstone Project For The Data Incubator Fellowship Program")
 #display images from capstone project
-st.write("""
-        Describe Data
-        
-        Describe Cleaning the Data (Regex, parsing, removing phrases like 'Contains'
-        
-        Describe Establishing Data Base
-        
-        Describe use of sqlalchemy
-        
-        Describe Building the graph to display perfect matches
-        """)
+
+if st.button("Data and Motivation"):
+    st.write("""
+             
+            USDA Branded Food Items Dataset contains all food items registered with the USDA. The dataset
+            also contains informaiton about the ingredients, description, brand owner, and parent company selling the items.
+
+            This dataset is > 2GB and contains more than 3,568,000 food and beverage products' label information.
+
+            I built an application that assists consumers in finding food items registered 
+            with the USDA that match criteria according to their dietary preferences.
+                
+            The motivation for this project came from encountering the reaction mechanism of the preservative
+            Sodium Benzoate and Ascorbic Acid (Vitamin C). Under conditions favoring hydrolysis (high temperatures or
+            sun exposure) benzene is a byproduct albiet, often in extremely small quantities. Still, I was concerned 
+            with the potential presence of a carcinogen floating around in my orange juice. So I thought an application
+            that empowered users to make more informed decisions about items they consume would be a useful tool.
+                
+            """)
+
+if st.button("Cleaning and Processing the Data"):
+    st.write("""
+
+            As with most data in the real world. A little cleaning needed to be done to ensure consistency 
+            with my desired functionality. To accomplish this I primarily relied on the power of regex to 
+            standardize comma separated strings into python lists. 
+
+            Many ingredient labels contain some rendition of a tag like 'Contains 0.5% or less of the following'.
+            However, given the variety of food products and producers, this tag is far from standardized in the dataset.
+            Thus regex was a great tool to generalize the above tag to account for edge cases like contain(s), (x)%, 
+            less than, less, or less, or less than, etc. 
+
+            Another behavior of the text in need of wrangling was the presence of descriptive modifiers before and after ingredients.
+            These modifiers appeared in the form of 'as an anti-caking agent', 'to preserve freshness', 'for color', 'used for', etc. 
+            Many of these occurences were identified and added to a list which was scanned for each item in the dataset and removed if 
+            they were found in the ingredient list. 
+
+            Parsing the data was a very important step so ample time was spent covering as many different forms of data impurity as
+            possible to ensure noningredient words would not be passed as ingredients to the database.
+            
+            """)
+
+if st.button("Database Management and Interface"):
+    st.write("""
+            To efficiently access the processed data in an application, it was stored in a PostgresSQL database. Aiven was used to
+            host this database. Then to establish connections and perform in-app querying, sqlalchemy was used to pythonically 
+            interface with the database. 
+            
+            """)
+
+if st.button("Display Perfect Matches"):
+    st.write("""
+            Once queried, the data was displayed using a completely custom built hierarichal directed acyclic graph built in plotly.
+            Although this process was slightly tedious I was pleased with the functionality and interactivity of the plotly figure 
+            generated. One issue encountered during the developement of the visualization was dealing with queries that returned large
+            result sets. To solve this issue a rendition of an alternating sequence was utilized to compute how the nodes would be 
+            distributed on the graph that was independent from the number of nodes.
+            """)
 
 capstone_toggler = st.toggle("Display Capstone Project")
 if capstone_toggler:
@@ -155,7 +207,7 @@ if capstone_toggler:
     st.write("Display Query Results")
     st.image('imgs/cap_proj_3.png')
 
-st.write("""Data Source:
+st.write("""Data Source For Ingredient Identifier:
 
         U.S. Department of Agriculture, Agricultural Research Service. 
         FoodData Central, 2023. fdc.nal.usda.gov.
@@ -163,21 +215,46 @@ st.write("""Data Source:
 
 #Embed emotion classification spark model
 st.header("pySpark Text Classification Model")
-st.subheader("Here is a simple emotion classifier I built using spark because I think it is a great framework for NLP classification tasks")
+st.subheader("A simple emotion classifier built using spark")
+
 st.write("""        
         Building this model I had to walk the line of overfitting based on single words. It has proven quite easy to trick the model
         with oxymoronic input. The training data also elucidates the complexity of language and the dangers of 
         restricting human behavior to oversimplified descriptions (speech only being categorically confined to 6 emotions).
 
-        The model performed with 90% accuracy on the training data and the most important parameter was document frequency count in the 
-        processing step. This was a great reminder of the age old adage 'garbage in garbage out' because despite pulling all of the levers of 
+
+        """)
+
+#checkbox to explain model performance
+model_perf_check = st.checkbox("Model Performance")
+if model_perf_check:
+    st.write("""
+            The model performed with 90% accuracy on the training data and the most important parameter was document frequency count in the 
+        processing step. 
+        
+        This was a great reminder of the age old adage 'garbage in garbage out' because despite pulling all of the levers of 
         the logistic regression model (which performed better than 4 other models), the accuracy was limited by how the text was preprocessed.
+        
         Another apparent shortcoming of the model is the inability to classify surprise without the presence of explicit surprise 
         related keywords in the text. This is likely due to the descrepency between the number of training labels associated with surprise
         which had approximately 15,000 labels compared to all other labels with at least four times as many for training.
+            """)
+    
+#checkbox to explain hyperparameter tuning
+hyperparam_check = st.checkbox("Hyperparameter Tuning")
+if hyperparam_check:
+    st.write("""
+            Talk about params used and how I used CrossValidation to determine
+            optimal parameters and discuss Classificaiton Evaluator in spark 
+            """)
 
-        The model sometimes performs surprisingly well with more abstract emotional expressions,
-        here are some examples of this abstract metaphoric classification: 
+
+#checkbox to show some examples of the model input/output
+examples_check = st.checkbox("Examples")
+if examples_check:
+    st.write("""
+            The model sometimes performs surprisingly well with more abstract emotional expressions,
+            here are some examples of this abstract metaphoric classification: 
         
         "That ship has left the harbour" = sadness
         
@@ -190,14 +267,13 @@ st.write("""
         "I almost soiled myself when the leopard ran at me" = fear
 
         "Is it possible to do that" = surprise
-
-        """)
+            """)
 
 #describe input format
 st.write("""
-            Input any sentence to see how this model holds up, the more abstract the more suprising the model will behave, 
-            sometimes favorably and sometimes far less favorably.
-            """)
+        Type any sentence into the textbox to see how this model holds up. With oxymoronic or abstract input
+        the model behavior can be quite surprising, sometimes favorably and sometimes far less favorably.
+        """)
 
 ## consider adding regex to replace all non alphabet characters with ''
 
@@ -222,7 +298,7 @@ if input_text:
 
 st.write("""
 
-        Data Source: 
+        Data Source For Training Spark Model: 
         
             @inproceedings{saravia-etal-2018-carer,\n
             title = "{CARER}: Contextualized Affect Representations for Emotion Recognition",\n
