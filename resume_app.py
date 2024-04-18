@@ -47,7 +47,7 @@ with st.container():
 st.subheader("About Me")
 st.write("""
                 
-        I am a Data Scientist who is enthusiastic about learning new technologies
+        I am a Data Scientist and Python Developer who is enthusiastic about learning new technologies
         and adapting to innovations in the field. 
 
         All of the facets of machine learning are vital arrows in the 
@@ -104,7 +104,7 @@ st.write("""
 #internship graph
 st.header("Internship")
 st.write("""
-        Click 'Build Graph' to build the visualization and then hover over each data point to view the corresponding information.
+        Click 'Build Graph' to build the visualization and hover over the data poins to view the corresponding information.
         """)
 #load internship graph data
 intern_data = undill_it('resume_data/intern_data.dll')
@@ -171,8 +171,8 @@ if st.button("Cleaning and Processing the Data"):
             Thus regex was a great tool to generalize the above tag to account for edge cases like contain(s), (x)%, 
             less than, less, or less, or less than, etc. 
 
-            Another behavior of the text in need of wrangling was the presence of descriptive modifiers before and after ingredients.
-            These modifiers appeared in the form of 'as an anti-caking agent', 'to preserve freshness', 'for color', 'used for', etc. 
+            Another textual behavior in need of wrangling was the presence of descriptive modifiers before and after ingredients.
+            These modifiers were of the form: 'as an anti-caking agent', 'to preserve freshness', 'for color', 'used for', etc. 
             Many of these occurences were identified and added to a list which was scanned for each item in the dataset and removed if 
             they were found in the ingredient list. 
 
@@ -191,11 +191,14 @@ if st.button("Database Management and Interface"):
 
 if st.button("Display Perfect Matches"):
     st.write("""
-            Once queried, the data was displayed using a completely custom built hierarichal directed acyclic graph built in plotly.
+            Once queried, the data was displayed using a custom hierarichally directed acyclic graph built in plotly.
             Although this process was slightly tedious I was pleased with the functionality and interactivity of the plotly figure 
             generated. One issue encountered during the developement of the visualization was dealing with queries that returned large
-            result sets. To solve this issue a rendition of an alternating sequence was utilized to compute how the nodes would be 
-            distributed on the graph that was independent from the number of nodes.
+            result sets. 
+            
+            To solve this issue a rendition of an alternating sequence was utilized to compute the horizontal 
+            distribution of nodes on the graph. Ensuring spacing would account for various items per brand and be independent of
+            the number of nodes on the graph.
             """)
 
 capstone_toggler = st.toggle("Display Capstone Project")
@@ -244,8 +247,12 @@ if model_perf_check:
 hyperparam_check = st.checkbox("Hyperparameter Tuning")
 if hyperparam_check:
     st.write("""
-            Talk about params used and how I used CrossValidation to determine
-            optimal parameters and discuss Classificaiton Evaluator in spark 
+            The models hyperpameter's were tuned using pySpark's CrossValidator and ClassificationEvaluator
+            objects.
+
+            As stated above, the greatest improvement in model accuracy was achieved by increasing document frequency count during
+            the text vectorization step. 
+            
             """)
 
 
@@ -325,15 +332,21 @@ st.write("""
 #Add ssesction about process of building the site
 st.header("How I built this")
 st.write("""
-        add some fun stuff I did while building this project
+        You can checkout the python code I used to build this app by clicking the github logo in the top right corner.
         
-        talk about add java to packages.txt
+        To incorporate the pySpark classification model, Scala and Java are needed in the application environment.
+        Thankfully streamlit allows for additional non-python packakes to be specified in a 'packages.txt' file.
         
-        talk about embedding autoscroll anchors in markdown sections
+        The autoscroll/anchor feature in the 'Sections' container is a nice trick streamlit inherited from markdown.
         
-        talk about building the animation
+        All of the figures used to display data in the app were built using Plotly. Personally plotly is my favorite
+        python visualization tool because I have yet to encounter a visualization that cannot be built (often concisely)
+        using either plotly express or the more robust figure objects. It also has nice features for creating animations
+        like the one found in the 'Internship' section.
         
-        talk about adding download button for pdf ... mime data
+        Another very nice feature of streamlit is the ability to add the download button for any file in the environment.
+        In a data science context this could even be used to train a model or configure a visualization and then allow for the user 
+        to download that object directly from the application.
         
         """)
 
