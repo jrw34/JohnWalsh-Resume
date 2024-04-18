@@ -116,13 +116,13 @@ intern_graph = animated_intern_graph(intern_data, intern_pos_dict)
 st.plotly_chart(intern_graph)
 
 #embed thesis hyperlink
-st.write("I used this work to write my senior thesis at FAU, you can click the button 'View Paper' below to find the paper hosted on github.")
+st.write("This work to write my senior thesis at FAU, you can click the button 'View Paper' below to find the paper hosted on github.")
 st.write("""
-            This was a great opportunity to work on a project from start to finish. 
-            My work entailed retrieving the data, anonymizing, cleaning, analyzing, processing, 
+            It was a great opportunity to work on a project from start to finish. 
+            My project entailed retrieving the data, anonymizing, cleaning, analyzing, processing, 
             and modelling the data in a manner that was generalizable to other company assets.
-            One particularly exciting facet of the project is the Transparency (Explainability) 
-            of the insights generated, this is an important feature considering strict documentation 
+            One particularly exciting facet of the project is the transparency (explainability) 
+            of the insights generated, an important feature considering strict documentation 
             is required to explain decisions guiding users of a model of this nature. 
         """)
         
