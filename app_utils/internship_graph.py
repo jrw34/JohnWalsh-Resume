@@ -85,7 +85,13 @@ def animated_intern_graph(intern_data, intern_pos_dict):
                                              marker_color = 'blue',
                                              marker_size = [35] + [25]*9 + [35]))  #final frame
                  ] #end frames list
-                                ).update_xaxes(showticklabels=False, showgrid = False, zeroline = False)\
-                                 .update_yaxes(showgrid = True, zeroline = False, tickfont = dict(size = 20, color = '#1A0A53'))
+                                ).update_xaxes(showticklabels=False, 
+                                               showgrid = False, 
+                                               zeroline = False, 
+                                               fixedrange = True)\
+                                 .update_yaxes(showgrid = True, 
+                                               zeroline = False, 
+                                               tickfont = dict(size = 20, color = '#1A0A53'),
+                                               fixedrange = True)
 
     return animated_intern_plot
