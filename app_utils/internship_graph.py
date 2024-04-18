@@ -30,7 +30,11 @@ def animated_intern_graph(intern_data, intern_pos_dict):
             xaxis = dict(range = [-3, 3]),
             title = dict(text = 'Internship At 24/7 Software', x = 0.55, y=0.9, 
                          xanchor = 'center', yanchor = 'top'),
-            plot_bgcolor = 'lightgray'),
+            plot_bgcolor = 'lightgray',
+            width = 800,
+            height = 600,
+            font = dict(color = '#1A0A53', size = 14),
+            hoverlabel = dict(font = dict(family = 'sans-serif', size = 16), bgcolor='white')),
             frames = [ #start frames list
                   go.Frame(data = [go.Scatter(x = [0], 
                                               y = [10], 
@@ -82,6 +86,6 @@ def animated_intern_graph(intern_data, intern_pos_dict):
                                              marker_size = [35] + [25]*9 + [35]))  #final frame
                  ] #end frames list
                                 ).update_xaxes(showticklabels=False, showgrid = False, zeroline = False)\
-                                 .update_yaxes(showgrid = True, zeroline = False)
+                                 .update_yaxes(showgrid = True, zeroline = False, tickfont = dict(size = 20, color = '#1A0A53'))
 
     return animated_intern_plot
