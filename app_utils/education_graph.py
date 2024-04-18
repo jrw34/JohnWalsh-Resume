@@ -39,7 +39,7 @@ def education_treemap(tdi_data, fau_data, color_1, color_2, sector_bg_color, sec
                                 color=sector_font_color)),
                     row = 1, 
                     col = 2)\
-                        .update_annotations(yshift=20, font_size = 28, font_color = 'black')
+                        .update_annotations(yshift=20, font_size = 28, font_color = sector_font_color)
     
     #return plotly figure object
     return education_trees
