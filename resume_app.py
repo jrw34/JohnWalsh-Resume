@@ -116,7 +116,7 @@ intern_graph = animated_intern_graph(intern_data, intern_pos_dict)
 st.plotly_chart(intern_graph)
 
 #embed thesis hyperlink
-st.write("This work to write my senior thesis at FAU, you can click the button 'View Paper' below to find the paper hosted on github.")
+st.write("This work was also my senior thesis at FAU, you can click the button 'View Paper' below to find the paper hosted on github.")
 st.write("""
             It was a great opportunity to work on a project from start to finish. 
             My project entailed retrieving the data, anonymizing, cleaning, analyzing, processing, 
