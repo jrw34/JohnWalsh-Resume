@@ -26,7 +26,7 @@ with open("John_Walsh_Resume.pdf", "rb") as file:
 with st.container():
     col_1, col_2 = st.columns([2,1])
     col_1.markdown("""
-                # Sections
+                ## Sections
             
                 [Education](#education)
             
@@ -39,6 +39,8 @@ with st.container():
                 [pySpark Text Classification Model](#pyspark-text-classification-model)
 
                 [How I Built This](#how-i-built-this)
+
+                [Contact Info](#contact-info)
             
                 """)
     col_2.image("imgs/headshot.png")
@@ -51,7 +53,7 @@ st.write("""
         and adapting to innovations in the field. 
 
         All of the facets of machine learning are vital arrows in the 
-        quiver of buisiness problem solving. Data is a tool drastically 
+        quiver of business problem solving. Data is a tool drastically 
         improving the world and I am thrilled to participate in bringing 
         data to life.
                         
@@ -85,9 +87,9 @@ st.write("""
         Courses Tutored: Matrix Theory, Introduction to Statistics, 
         Calculus 1,2 & 3, and Differential Equations
 
-        While tutoring students from nontechnical backgrounds I found success in
-        looking for applications of the pertinant material in the real world to help 
-        motivate learning of the material.
+        While tutoring students from nontechnical backgrounds, found success in
+        looking for real world applications of the pertinant mathematics to make
+        material relatable. 
 
         Duration: 2 years
         """)
@@ -129,11 +131,13 @@ st.link_button("View Paper: Spatiotemporal Determinants of Football Stadium Inci
 
 #skills graph
 st.header("Skills")
+st.write("Click the within the inner two circles to toggle view, center click to toggle back")
 #load skills graph data
 skills_df = undill_it('resume_data/skills_df.dll')
 #generate skills_graph
 skill_graph = skills_graph(skills_df)
 st.plotly_chart(skill_graph)
+
 
 #Capstone Project 
 st.header("Ingredient Identifier")
@@ -148,12 +152,12 @@ if st.button("Data and Motivation"):
 
             This dataset is > 2GB and contains more than 3,568,000 food and beverage products' label information.
 
-            I built an application that assists consumers in finding food items registered 
+            An application was built that assists consumers in finding food items registered 
             with the USDA that match criteria according to their dietary preferences.
                 
             The motivation for this project came from encountering the reaction mechanism of the preservative
-            Sodium Benzoate and Ascorbic Acid (Vitamin C). Under conditions favoring hydrolysis (high temperatures or
-            sun exposure) benzene is a byproduct albiet, often in extremely small quantities. Still, I was concerned 
+            Sodium Benzoate and Ascorbic Acid (Vitamin C). Under conditions favoring homolysis (high temperatures or
+            sun exposure) benzene is a byproduct; albiet, often in extremely small quantities. Still, I was concerned 
             with the potential presence of a carcinogen floating around in my orange juice. So I thought an application
             that empowered users to make more informed decisions about items they consume would be a useful tool.
                 
@@ -162,9 +166,9 @@ if st.button("Data and Motivation"):
 if st.button("Cleaning and Processing the Data"):
     st.write("""
 
-            As with most data in the real world. A little cleaning needed to be done to ensure consistency 
-            with my desired functionality. To accomplish this I primarily relied on the power of regex to 
-            standardize comma separated strings into python lists. 
+            As with most data in the real world. Some cleaning needed to be done to ensure consistency 
+            with my desired functionality. To accomplish this the power of regex was utilized to 
+            standardize and parse comma separated strings into python lists. 
 
             Many ingredient labels contain some rendition of a tag like 'Contains 0.5% or less of the following'.
             However, given the variety of food products and producers, this tag is far from standardized in the dataset.
@@ -192,12 +196,12 @@ if st.button("Database Management and Interface"):
 if st.button("Display Perfect Matches"):
     st.write("""
             Once queried, the data was displayed using a custom hierarichally directed acyclic graph built in plotly.
-            Although this process was slightly tedious I was pleased with the functionality and interactivity of the plotly figure 
-            generated. One issue encountered during the developement of the visualization was dealing with queries that returned large
-            result sets. 
+            Although this process was slightly tedious, the functionality and interactivity of the plotly figure 
+            generated proved worth the effort. One issue encountered during the developement of the visualization was 
+            dealing with queries returning large result sets. 
             
-            To solve this issue a rendition of an alternating sequence was utilized to compute the horizontal 
-            distribution of nodes on the graph. Ensuring spacing would account for various items per brand and be independent of
+            This issue was solved with a rendition of an alternating sequence was utilized to compute the horizontal 
+            distribution of nodes on the graph. Ensuring spacing would account for various items per brand whilst independent of
             the number of nodes on the graph.
             """)
 
@@ -221,11 +225,9 @@ st.header("pySpark Text Classification Model")
 st.subheader("A simple emotion classifier built using spark")
 
 st.write("""        
-        Building this model I had to walk the line of overfitting based on single words. It has proven quite easy to trick the model
+        Building this model a balance was acheived on overfitting based on single words. It has proven quite easy to trick the model
         with oxymoronic input. The training data also elucidates the complexity of language and the dangers of 
         restricting human behavior to oversimplified descriptions (speech only being categorically confined to 6 emotions).
-
-
         """)
 
 #checkbox to explain model performance
@@ -247,8 +249,7 @@ if model_perf_check:
 hyperparam_check = st.checkbox("Hyperparameter Tuning")
 if hyperparam_check:
     st.write("""
-            The models hyperpameter's were tuned using pySpark's CrossValidator and ClassificationEvaluator
-            objects.
+            The models hyperpameters were tuned using pySpark's CrossValidator with ClassificationEvaluator.
 
             As stated above, the greatest improvement in model accuracy was achieved by increasing document frequency count during
             the text vectorization step. 
@@ -332,14 +333,14 @@ st.write("""
 #Add ssesction about process of building the site
 st.header("How I built this")
 st.write("""
-        You can checkout the python code I used to build this app by clicking the github logo in the top right corner.
+        To checkout the python code used to build this app, click the github logo in the top right corner.
         
-        To incorporate the pySpark classification model, Scala and Java are needed in the application environment.
+        For incorporating the pySpark classification model, Scala and Java are needed in the application environment.
         Thankfully streamlit allows for additional non-python packakes to be specified in a 'packages.txt' file.
         
         The autoscroll/anchor feature in the 'Sections' container is a nice trick streamlit inherited from markdown.
         
-        All of the figures used to display data in the app were built using Plotly. Personally plotly is my favorite
+        All figures in the app were built using Plotly. Personally, plotly is my favorite
         python visualization tool because I have yet to encounter a visualization that cannot be built (often concisely)
         using either plotly express or the more robust figure objects. It also has nice features for creating animations
         like the one found in the 'Internship' section.
@@ -348,5 +349,10 @@ st.write("""
         In a data science context this could even be used to train a model or configure a visualization and then allow for the user 
         to download that object directly from the application.
         
+        """)
+
+st.header("Contact Info")
+st.write("""
+        email: johnrwalsh34@gmail.com
         """)
 
