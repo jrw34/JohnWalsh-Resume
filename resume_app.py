@@ -69,8 +69,10 @@ st.write("""
                 
         """)
 
+
 #education graph
 st.header("Education")
+
 #load education graph data
 tdi_data = undill_it('resume_data/tdi_data.dll')
 fau_data = undill_it('resume_data/fau_data.dll')
@@ -81,15 +83,15 @@ edu_graph = education_treemap(tdi_data, fau_data,
                               sector_font_color = '#1A0A53')
 st.plotly_chart(edu_graph)
 
+st.write("""[Return to top](#sections) """)
 #Describe Tutoring Role and Timeframe
 st.subheader("Mathematics Tutor at Florida Atlantic University")
 st.write("""
         Courses Tutored: Matrix Theory, Introduction to Statistics, 
         Calculus 1,2 & 3, and Differential Equations
 
-        While tutoring students from nontechnical backgrounds, found success in
-        looking for real world applications of the pertinant mathematics to make
-        material relatable. 
+        Found success by identifying real world applications of the pertinant mathematics 
+        when tutoring students with nontechnical backgrounds. 
 
         Duration: 2 years
         """)
@@ -129,6 +131,8 @@ st.write("""
 st.link_button("View Paper: Spatiotemporal Determinants of Football Stadium Incidents",
                "https://github.com/jrw34/ThesisJW_PDF/blob/main/JW_Thesis_pdf2.pdf")
 
+st.write("""[Return to top](#sections) """)
+
 #skills graph
 st.header("Skills")
 st.write("Click the within the inner two circles to toggle view, center click to toggle back")
@@ -138,9 +142,11 @@ skills_df = undill_it('resume_data/skills_df.dll')
 skill_graph = skills_graph(skills_df)
 st.plotly_chart(skill_graph)
 
+st.write("""[Return to top](#sections) """)
 
 #Capstone Project 
 st.header("Ingredient Identifier")
+
 st.subheader("Capstone Project For The Data Incubator Fellowship Program")
 #display images from capstone project
 
@@ -167,7 +173,7 @@ if st.button("Cleaning and Processing the Data"):
     st.write("""
 
             As with most data in the real world. Some cleaning needed to be done to ensure consistency 
-            with my desired functionality. To accomplish this the power of regex was utilized to 
+            with the desired functionality. To accomplish this regular expressions were utilized to 
             standardize and parse comma separated strings into python lists. 
 
             Many ingredient labels contain some rendition of a tag like 'Contains 0.5% or less of the following'.
@@ -175,7 +181,7 @@ if st.button("Cleaning and Processing the Data"):
             Thus regex was a great tool to generalize the above tag to account for edge cases like contain(s), (x)%, 
             less than, less, or less, or less than, etc. 
 
-            Another textual behavior in need of wrangling was the presence of descriptive modifiers before and after ingredients.
+            Another textual behavior in need of wrangling were descriptive modifiers before and after ingredients.
             These modifiers were of the form: 'as an anti-caking agent', 'to preserve freshness', 'for color', 'used for', etc. 
             Many of these occurences were identified and added to a list which was scanned for each item in the dataset and removed if 
             they were found in the ingredient list. 
@@ -189,7 +195,7 @@ if st.button("Database Management and Interface"):
     st.write("""
             To efficiently access the processed data in an application, it was stored in a PostgresSQL database. Aiven was used to
             host this database. Then to establish connections and perform in-app querying, sqlalchemy was used to pythonically 
-            interface with the database. 
+            execute SQL queries within the database. 
             
             """)
 
@@ -200,9 +206,9 @@ if st.button("Display Perfect Matches"):
             generated proved worth the effort. One issue encountered during the developement of the visualization was 
             dealing with queries returning large result sets. 
             
-            This issue was solved with a rendition of an alternating sequence was utilized to compute the horizontal 
-            distribution of nodes on the graph. Ensuring spacing would account for various items per brand whilst independent of
-            the number of nodes on the graph.
+            This issue was resolved with a rendition of an alternating sequence, utilized to compute the horizontal 
+            distribution of nodes on the graph. Ensuring spacing would account for various items per brand whilst remaining
+            independent of the number of nodes on the graph.
             """)
 
 capstone_toggler = st.toggle("Display Capstone Project")
@@ -219,7 +225,7 @@ st.write("""Data Source For Ingredient Identifier:
         U.S. Department of Agriculture, Agricultural Research Service. 
         FoodData Central, 2023. fdc.nal.usda.gov.
         """)
-
+st.write("""[Return to top](#sections) """)
 #Embed emotion classification spark model
 st.header("pySpark Text Classification Model")
 st.subheader("A simple emotion classifier built using spark")
@@ -340,12 +346,12 @@ st.write("""
         
         The autoscroll/anchor feature in the 'Sections' container is a nice trick streamlit inherited from markdown.
         
-        All figures in the app were built using Plotly. Personally, plotly is my favorite
-        python visualization tool because I have yet to encounter a visualization that cannot be built (often concisely)
+        All figures in the app were built using Plotly. Plotly is a personal favorite for high-level visualizations because I
+        have yet to encounter a visualization that cannot be built (often concisely)
         using either plotly express or the more robust figure objects. It also has nice features for creating animations
-        like the one found in the 'Internship' section.
+        like the one found in the [Internship](#internship) section.
         
-        Another very nice feature of streamlit is the ability to add the download button for any file in the environment.
+        Another great feature of streamlit is the ability to add the download button for any file in the environment.
         In a data science context this could even be used to train a model or configure a visualization and then allow for the user 
         to download that object directly from the application.
         
@@ -355,4 +361,4 @@ st.header("Contact Info")
 st.write("""
         email: johnrwalsh34@gmail.com
         """)
-
+st.write("""[Return to top](#sections) """)
