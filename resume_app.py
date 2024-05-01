@@ -135,7 +135,7 @@ st.write("""[Return to top](#sections) """)
 
 #skills graph
 st.header("Skills")
-st.write("Click the within the inner two circles to toggle view, center click to toggle back")
+st.write("Click within the inner two circles to toggle view, center click to toggle back")
 #load skills graph data
 skills_df = undill_it('resume_data/skills_df.dll')
 #generate skills_graph
