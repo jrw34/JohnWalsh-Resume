@@ -2,11 +2,11 @@ import streamlit as st
 import pandas as pd
 
 #import utils functions
-from utils.education_graph import *      #education_treemap
-from utils.internship_graph import *     #animated_intern_graph
-from utils.skills_graph import *         #skills_graph
-from utils.spark_app_interface import *  #create_spark_instance, load_lrModel, load_pipeline, classify_input
-from utils.graph_data import (
+from src.utils.education_graph import education_treemap
+from src.utils.internship_graph import animated_intern_graph
+from src.utils.skills_graph import skills_graph
+from src.utils.spark_app_interface import classify_input, create_spark_instance, load_lrModel, load_pipeline
+from src.utils.graph_data import (
     fau_data, 
     tdi_data,
     intern_data,
