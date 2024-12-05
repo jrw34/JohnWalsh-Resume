@@ -1,19 +1,24 @@
 import streamlit as st
 import pandas as pd
 
-#import app_utils functions
-from app_utils.education_graph import *      #education_treemap
-from app_utils.internship_graph import *     #animated_intern_graph
-from app_utils.skills_graph import *         #skills_graph
-from app_utils.dill_loader import *          #undill_it
-from app_utils.spark_app_interface import *  #create_spark_instance, load_lrModel, load_pipeline, classify_input
-
+#import utils functions
+from utils.education_graph import *      #education_treemap
+from utils.internship_graph import *     #animated_intern_graph
+from utils.skills_graph import *         #skills_graph
+from utils.spark_app_interface import *  #create_spark_instance, load_lrModel, load_pipeline, classify_input
+from utils.graph_data import (
+    fau_data, 
+    tdi_data,
+    intern_data,
+    intern_positions,
+    skills_data,
+    )
 
 #create title
 st.title("John Walsh Resume (Currently Rebuilding ...)")
 
 #Download Resume PDF button
-with open("resume_data/John_Walsh_Resume.pdf", "rb") as file:
+with open("src/resume_data/John_Walsh_Resume.pdf", "rb") as file:
     btn=st.download_button(
     label="Click Here to Download My Tradtional Resume as a PDF",
     file_name = 'John_Walsh_Resume.pdf',
@@ -43,7 +48,7 @@ with st.container():
                 [Contact Info](#contact-info)
             
                 """)
-    col_2.image("resume_data/imgs/headshot.png")
+    col_2.image("src/resume_data/imgs/headshot.png")
 
 #About Me 
 st.subheader("About Me")
@@ -73,9 +78,6 @@ st.write("""
 #education graph
 st.header("Education")
 
-#load education graph data
-tdi_data = undill_it('resume_data/tdi_data.dll')
-fau_data = undill_it('resume_data/fau_data.dll')
 #generate education_treemap
 edu_graph = education_treemap(tdi_data, fau_data, 
                               color_1 = '#94E3FE', color_2 = '#FFC677', 
@@ -110,11 +112,9 @@ st.header("Internship")
 st.write("""
         Click 'Build Graph' to build the visualization and hover over the data poins to view the corresponding information.
         """)
-#load internship graph data
-intern_data = undill_it('resume_data/intern_data.dll')
-intern_pos_dict = undill_it('resume_data/intern_pos_dict.dll')
+
 #generate animated_intern_graph
-intern_graph = animated_intern_graph(intern_data, intern_pos_dict)
+intern_graph = animated_intern_graph(intern_data, intern_positions)
 st.plotly_chart(intern_graph)
 
 #embed thesis hyperlink
@@ -136,10 +136,9 @@ st.write("""[Return to top](#sections) """)
 #skills graph
 st.header("Skills")
 st.write("Click within the inner two circles to toggle view, center click to toggle back")
-#load skills graph data
-skills_df = undill_it('resume_data/skills_df.dll')
+
 #generate skills_graph
-skill_graph = skills_graph(skills_df)
+skill_graph = skills_graph(skills_data)
 st.plotly_chart(skill_graph)
 
 st.write("""[Return to top](#sections) """)
@@ -214,17 +213,22 @@ if st.button("Display Perfect Matches"):
 capstone_toggler = st.toggle("Display Capstone Project")
 if capstone_toggler:
     st.write("Input Food Item")
-    st.image('imgs/cap_proj_1.png')
+    st.image('src/resume_data/imgs/cap_proj_1.png')
     st.write("Select Desired Features")
-    st.image('imgs/cap_proj_2.png')
+    st.image('src/resume_data/imgs/cap_proj_2.png')
     st.write("Display Query Results")
-    st.image('imgs/cap_proj_3.png')
+    st.image('src/resume_data/imgs/cap_proj_3.png')
 
-st.write("""Data Source For Ingredient Identifier:
+st.write(
+    """
+    Data Source For Ingredient Identifier:
+    
+    U.S. Department of Agriculture, Agricultural Research Service. 
+    FoodData Central, 2023. fdc.nal.usda.gov.
+    
+    """
+)
 
-        U.S. Department of Agriculture, Agricultural Research Service. 
-        FoodData Central, 2023. fdc.nal.usda.gov.
-        """)
 st.write("""[Return to top](#sections) """)
 #Embed emotion classification spark model
 st.header("pySpark Text Classification Model")
@@ -295,10 +299,10 @@ st.write("""
 sqlContext = create_spark_instance()
 
 #load lrModel
-lrModel = load_lrModel("lrModel_emotions.model")
+lrModel = load_lrModel("src/SparkModel/lrModel_emotions.model")
 
 #load fitPipeline
-fitPipeline = load_pipeline("lrModel_transformation_pipe")
+fitPipeline = load_pipeline("src/SparkModel/lrModel_transformation_pipe")
 
 #user input
 input_text = st.text_input("Input sentence here")
