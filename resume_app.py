@@ -10,10 +10,10 @@ from app_utils.spark_app_interface import *  #create_spark_instance, load_lrMode
 
 
 #create title
-st.title("John Walsh Resume")
+st.title("John Walsh Resume (Currently Rebuilding ...)")
 
 #Download Resume PDF button
-with open("John_Walsh_Resume.pdf", "rb") as file:
+with open("resume_data/John_Walsh_Resume.pdf", "rb") as file:
     btn=st.download_button(
     label="Click Here to Download My Tradtional Resume as a PDF",
     file_name = 'John_Walsh_Resume.pdf',
@@ -43,7 +43,7 @@ with st.container():
                 [Contact Info](#contact-info)
             
                 """)
-    col_2.image("imgs/headshot.png")
+    col_2.image("resume_data/imgs/headshot.png")
 
 #About Me 
 st.subheader("About Me")
