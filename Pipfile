@@ -14,6 +14,9 @@ streamlit = "*"
 setuptools = "*"
 
 [dev-packages]
+ruff = "0.8.2"
+mypy = "1.13.0"
+pre-commit = "4.0.1"
 
 [requires]
 python_version = "3.13"
