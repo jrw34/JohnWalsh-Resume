@@ -5,67 +5,110 @@ from typing import TypedDict, Dict
 reference_markdown: str = """
                 ## Sections
 
-                [Education](#education)
+                [Home](#john-walsh-resume)
 
-                [Internship](#internship)
+                [Experience](#experience)
+
+                [Education](#education)
 
                 [Skills](#skills)
 
-                [Capstone Project for The Data Incubator](#ingredient-identifier)
-
-                [pySpark Text Classification Model](#pyspark-text-classification-model)
+                [pySpark Text Classification](#pyspark-text-classification-model)
 
                 [How I Built This](#how-i-built-this)
 
-                [Contact Info](#contact-info)
+                [About Me + Contact Info](#about-me)
 
                 """
 
+experience_section: str = """
+            ## Experience
+
+            [Associate Analyst @ SciTec](#scitec)
+
+            [Data Science Fellow @ The Data Incubator](#the-data-incubator)
+
+            [Business Analyst Intern @ 24/7 Software](#internship)
+
+            """
+
 about_me_description: str = """
 
-        I am a Data Scientist and Python Developer who is enthusiastic about learning new technologies
-        and adapting to innovations in the field.
+        I am a Python Developer and Data Scientist who is enthusiastic about learning new technologies
+        and adapting to the ever expanding state of innovation.
 
-        All of the facets of machine learning are vital arrows in the
-        quiver of business problem solving. Data is a tool drastically
-        improving the world and I am thrilled to participate in bringing
-        data to life.
+        Data is a feature of the modern world capable of drastically improving our quality of life, and I am thrilled to participate
+        in bringing data to life.
 
         With firm belief in hard work, I persistently strive to produce meaningful,
-        thorough, and reproducible results built from an adequate mathematical
+        well documented, and reproducible results built from an adequate mathematical
         foundation.
 
-        Furthermore, I hold communication as essential in the data science
+        Furthermore, I hold communication as essential in the development
         process and there is little value in improperly communicated insights derived from data.
 
-        Beyond my interests as a data scientist I often find myself trail running or travelling when the opportunities arise.
+        Beyond my interests as a developer I often find myself trail running or travelling when the opportunities arise.
 
         """
 
 tutoring_description: str = """
+        From: Jan. 2021 - May 2023
+
         Courses Tutored: Matrix Theory, Introduction to Statistics,
         Calculus 1,2 & 3, and Differential Equations
 
         Found success by identifying real world applications of the pertinant mathematics
         when tutoring students with nontechnical backgrounds.
-
-        Timeframe: Jan. 2021 - May 2023
         """
 
 comp_chem_descrption: str = """
+        From: May 2021 - Aug. 2021
+
         Performed least squares optimization (analytically) using SVD in a Linux environment to project data points
         onto a best-fit plane in 3-D. As a result, enabled better assessment of molecular interactions in the dynamic model.
 
-        Timeframe: May 2021 - Aug. 2021
+        """
+
+intern_overview: str = """
+        ### Internship
+
+        ##### Position: Business Analyst Intern
+
+        ###### From: May 2022 - May 2023
+
+        - Built proof of concept ML model and data visualization capabilities to utilize previously unused customer data
+
+        - Frequently presented my findings and results to a Senior Product Manager and other Senior Leadership
+
+        - Work enabled better allocation of entertainment venue staff during events
+
         """
 
 thesis_description: str = """
+            This work was also my senior thesis at FAU.
             It was a great opportunity to work on a project from start to finish.
             My project entailed retrieving the data, anonymizing, cleaning, analyzing, processing,
             and modelling the data in a manner that was generalizable to other company assets.
             One particularly exciting facet of the project is the transparency (explainability)
             of the insights generated, an important feature considering strict documentation
             is required to explain decisions guiding users of a model of this nature.
+        """
+
+tdi_overview: str = """
+        ##### Position: Data Science Fellow
+
+        ###### Completed: Dec. 2023
+
+         - Achieved >90% on all assignments
+
+         - Built ML models for image processing, sentiment analysis, and regression
+
+         - Refined my ability to maintain and access SQL databases
+
+         - Learned how to apply ML from through the lens of business problem solving
+
+         - Coursework entailed ML Pipelines, Model/Feature Selection, Distributed Computing, and Data Processing/Visualization
+
         """
 
 # Capstone Descriptions
@@ -209,7 +252,7 @@ pyspark_data_source: str = """
         """
 
 how_i_built_this: str = """
-        To checkout the python code used to build this app, click the github logo in the top right corner.
+        To see the python code used to build this app, click the github logo in the top right corner.
 
         For incorporating the pySpark classification model, Scala and Java are needed in the application environment.
         Thankfully streamlit allows for additional non-python packakes to be specified in a 'packages.txt' file.
@@ -227,6 +270,28 @@ how_i_built_this: str = """
 
         """
 
+scitec_description: str = """
+        ##### Position: Asscociate Analyst/Engineer
+
+        ###### From: Aug. 2024 - Nov. 2024
+
+        -  Worked on a six-member analyst agile team in a Linux Dev Environment \n
+
+        -  Contributed to library code employing modern DevOps/CICD pipelines \n
+
+        -  Built interactive 3D visualizations to verify the behavior of simulated trajectories produced
+            using Python and MATLAB \n
+
+        -  Contributed to projects that asynchronously read and analyzed logging outputs from C++
+            code and implemented proprietary algorithms to make decisions for customers \n
+
+        -  Used Linear Algebra techniques to apply spatial transformations to simulated data \n
+
+        -  Implemented Test Driven Development (TDD) \n
+
+        -  Built Dash prototype to display algorithm output for customer demos \n
+        """
+
 
 # Create TypedDict class to store section description Data
 ## When New Sections are add this typing structure needs to be updated as well
@@ -234,22 +299,27 @@ class SectionDescriptions(TypedDict):
     """Typed Dictionary Holding Section Descriptions."""
 
     reference_section: str
-    about_me: str
+    experience_section: str
+    scitec_description: str
+    intern_overview: str
+    thesis: str
+    tdi_overview: str
+    capstone: Dict[str, str]
     tutoring: str
     chem_lab: str
-    thesis: str
-    capstone: Dict[str, str]
     pyspark: Dict[str, str]
+    about_me: str
     how_i_built_this: str
 
 
 # Dictionary Containing all text sections for easy import and readibility
 section_descriptions: SectionDescriptions = {
     "reference_section": reference_markdown,
-    "about_me": about_me_description,
-    "tutoring": tutoring_description,
-    "chem_lab": comp_chem_descrption,
+    "experience_section": experience_section,
+    "scitec_description": scitec_description,
+    "intern_overview": intern_overview,
     "thesis": thesis_description,
+    "tdi_overview": tdi_overview,
     "capstone": {
         "data_and_motivation": capstone_data_and_motivation,
         "cleaning_and_processing": capstone_cleaning_and_processing,
@@ -257,6 +327,8 @@ section_descriptions: SectionDescriptions = {
         "display_perfect_matches": capstone_display_perfect_matches,
         "data_source": capstone_data_source,
     },
+    "tutoring": tutoring_description,
+    "chem_lab": comp_chem_descrption,
     "pyspark": {
         "build_description": pyspark_build_description,
         "model_performance": pyspark_model_performance,
@@ -265,5 +337,6 @@ section_descriptions: SectionDescriptions = {
         "input_guide": pyspark_input_guide,
         "data_source": pyspark_data_source,
     },
+    "about_me": about_me_description,
     "how_i_built_this": how_i_built_this,
 }
