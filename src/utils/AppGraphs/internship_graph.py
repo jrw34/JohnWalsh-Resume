@@ -5,15 +5,13 @@ import plotly.graph_objects as go  # type: ignore[import-untyped]
 
 # Def function to display animation of 24/7 Software internship
 def animated_intern_graph(
-    intern_data: dict[str, str], intern_pos_dict: dict[str, tuple[int | float, int]]
+    intern_pos_dict: dict[str, tuple[int | float, int]],
 ) -> go.Figure:
     """
     Animated Visualization with Hover Text Displaying Infomation for my internship.
 
     Input:
     -----
-    intern_data : Dictionary containing label with corresponding hoverinfo as key,value pairs respectively
-
     intern_pos_dict: Dictionary containing label with corresponding tuple w/ locations of the form (x,y)
 
     Returns
@@ -25,6 +23,7 @@ def animated_intern_graph(
         go.Figure(
             data=[go.Scatter(x=[0], y=[10], mode="markers", name="")],
             layout=go.Layout(
+                hovermode=False,
                 updatemenus=[
                     dict(
                         type="buttons",
@@ -152,7 +151,6 @@ def animated_intern_graph(
                         x=[pos[0] for pos in intern_pos_dict.values()],
                         y=[pos[1] for pos in intern_pos_dict.values()],
                         mode="markers",
-                        hovertemplate=list(intern_data.values()),
                         marker_color="blue",
                         marker_size=[35] + [25] * 9 + [35],
                     )
