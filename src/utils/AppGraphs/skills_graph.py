@@ -23,6 +23,7 @@ def skills_graph(skills_df: pd.DataFrame) -> px.sunburst:
             data_frame=skills_df,
             path=["type", "category", "skill"],
             values="value",
+            color="category",
         )
         .update_layout(
             margin=dict(t=0, l=0, r=0, b=40, pad=4),

@@ -16,14 +16,14 @@ from src.utils.spark_app_interface import (
 from src.utils.AppDataStructs.graph_data import (
     fau_data,
     tdi_data,
-    intern_data,
+    intern_data_map,
     intern_positions,
-    skills_data,
+    skills_df,
 )
 from src.utils.AppDataStructs.section_descriptions import section_descriptions
 
-# create title
-st.title("John Walsh Resume (Currently Rebuilding ...)")
+# Create title
+st.title("John Walsh Resume")
 
 # Download Resume PDF button
 with open(Path("src/resume_data/John_Walsh_Resume.pdf"), "rb") as file:
@@ -34,80 +34,24 @@ with open(Path("src/resume_data/John_Walsh_Resume.pdf"), "rb") as file:
         mime="application/pdf",
     )
 
-
 # Reference Section and Headshot container
 with st.container():
     col_1, col_2 = st.columns([2, 1])
-    col_1.markdown(section_descriptions["reference_section"])
+    col_1.markdown(
+        """ ##### Welcome to my streamlit app! The blue underlined text can be clicked to easily navigate the page. You can also use the 'Sections' sidebar."""
+    )
+    col_1.markdown(section_descriptions["experience_section"])
     col_2.image("src/resume_data/imgs/headshot.png")
 
-# About Me
-st.subheader("About Me")
-st.write(section_descriptions["about_me"])
+# SciTec
+st.subheader("SciTec")
+st.markdown(section_descriptions["scitec_description"])
 
-# education graph
-st.header("Education")
-
-# generate education_treemap
-edu_graph = education_treemap(
-    tdi_data,
-    fau_data,
-    color_1="#94E3FE",
-    color_2="#FFC677",
-    sector_bg_color="#D4E3FE",
-    sector_font_color="#1A0A53",
-)
-st.plotly_chart(edu_graph)
-
-st.write("""[Return to top](#sections) """)
-# Describe Tutoring Role and Timeframe
-st.subheader("Mathematics Tutor at Florida Atlantic University")
-st.write(section_descriptions["tutoring"])
-
-# Describe Volunteer Role at Computational Chemistry Lab
-st.subheader("Computational Chemistry Laboratory Volunteer")
-st.write(section_descriptions["chem_lab"])
-
-# Internship graph
-st.header("Internship")
-st.write("""
-        Click 'Build Graph' to build the visualization and hover over the data poins to view the corresponding information.
-        """)
-
-# Generate animated_intern_graph
-intern_graph = animated_intern_graph(intern_data, intern_positions)
-st.plotly_chart(intern_graph)
-
-# Embed thesis hyperlink
-st.write(
-    "This work was also my senior thesis at FAU, you can click the button 'View Paper' below to find the paper hosted on github."
-)
-st.write(section_descriptions["thesis"])
-
-st.link_button(
-    "View Paper: Spatiotemporal Determinants of Football Stadium Incidents",
-    "https://github.com/jrw34/ThesisJW_PDF/blob/main/JW_Thesis_pdf2.pdf",
-)
-
-st.write("""[Return to top](#sections) """)
-
-# Skills graph
-st.header("Skills")
-st.write(
-    "Click within the inner two circles to toggle view, center click to toggle back"
-)
-
-# Generate skills_graph
-skill_graph = skills_graph(skills_data)
-st.plotly_chart(skill_graph)
-
-st.write("""[Return to top](#sections) """)
-
+# The Data Incubator
+st.subheader("The Data Incubator (TDI)")
+st.markdown(section_descriptions["tdi_overview"])
 # Capstone Project
-st.header("Ingredient Identifier")
-
-st.subheader("Capstone Project For The Data Incubator Fellowship Program")
-
+st.subheader("TDI Capstone Project: Ingredient Identifier")
 # Display images from capstone project
 if st.button("Data and Motivation"):
     st.write(section_descriptions["capstone"]["data_and_motivation"])
@@ -132,7 +76,67 @@ if capstone_toggler:
 
 st.write(section_descriptions["capstone"]["data_source"])
 
-st.write("""[Return to top](#sections) """)
+# Internship
+st.markdown(section_descriptions["intern_overview"])
+st.write(section_descriptions["thesis"])
+st.markdown("""
+        ##### Click 'Build Graph' to build the visualization.
+        ###### Then click each data point to view the corresponding information.
+        """)
+# Generate animated_intern_graph
+intern_graph = animated_intern_graph(intern_positions)
+intern_plot = st.plotly_chart(intern_graph, on_select="rerun")
+try:
+    # Use x,y coords of click data to get description from intern_data_map
+    st.html(
+        """<b> """
+        + intern_data_map[intern_plot.selection["points"][0]["x"]][  # type: ignore[attr-defined]
+            intern_plot.selection["points"][0]["y"]  # type: ignore[attr-defined]
+        ]
+        + """<b>"""
+    )  # type: ignore[attr-defined]
+except IndexError:
+    st.write("Click on a Data Point to view the information.")
+else:
+    st.write("")
+
+# Embed thesis hyperlink
+st.link_button(
+    "View Paper: Spatiotemporal Determinants of Football Stadium Incidents",
+    "https://github.com/jrw34/ThesisJW_PDF/blob/main/JW_Thesis_pdf2.pdf",
+)
+
+# Education graph
+st.header("Education")
+
+# Generate education_treemap
+edu_graph = education_treemap(
+    tdi_data,
+    fau_data,
+    color_1="#94E3FE",
+    color_2="#FFC677",
+    sector_bg_color="#D4E3FE",
+    sector_font_color="#1A0A53",
+)
+st.plotly_chart(edu_graph)
+
+# Describe Tutoring Role and Timeframe
+st.subheader("Mathematics Tutor at Florida Atlantic University")
+st.write(section_descriptions["tutoring"])
+
+# Describe Volunteer Role at Computational Chemistry Lab
+st.subheader("Computational Chemistry Laboratory Volunteer")
+st.write(section_descriptions["chem_lab"])
+
+# Skills graph
+st.header("Skills")
+st.write(
+    "Click within the inner two circles to toggle view, center click to toggle back"
+)
+
+# Generate skills_graph
+skill_graph = skills_graph(skills_df)
+st.plotly_chart(skill_graph)
 
 # Embed emotion classification spark model
 st.header("pySpark Text Classification Model")
@@ -149,7 +153,6 @@ if model_perf_check:
 hyperparam_check = st.checkbox("Hyperparameter Tuning")
 if hyperparam_check:
     st.write(section_descriptions["pyspark"]["hyperparams"])
-
 
 # Checkbox to show some examples of the model input/output
 examples_check = st.checkbox("Examples")
@@ -180,12 +183,23 @@ if input_text:
 
 st.write(section_descriptions["pyspark"]["data_source"])
 
-# Add sesction about process of building the site
+# Create sidebar
+with st.sidebar:
+    st.markdown(section_descriptions["reference_section"])
+
+# Add section about process of building the site
 st.header("How I built this")
 st.write(section_descriptions["how_i_built_this"])
 
-st.header("Contact Info")
+# Add About Me
+st.header("About Me")
+st.write(section_descriptions["about_me"])
+# Add Contact Info
+st.subheader("Contact Info")
 st.write("""
         email: johnrwalsh34@gmail.com
         """)
-st.write("""[Return to top](#sections) """)
+st.link_button(
+    "Find Me on LinkedIn",
+    "https://www.linkedin.com/in/john-walsh-90b0a82a0/",
+)
