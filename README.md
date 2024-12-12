@@ -30,3 +30,14 @@ pipenv run mypy .
 ```
 pipenv run streamlit run src/resume_app.py
 ```
+
+### Ingredient Identifier
+ - CSV was downloaded from https://fdc.nal.usda.gov/download-datasets
+ - File downloaded was "Full Download of All Data Types"
+ - Size of File: approx. 3GB
+ - File is cleaned and parsed then pushed to a cloud hosted AIVEN PostgreSQL instance
+ - ETL steps are found in src/IngredientIdentifier/etl_tools/
+ - To locally develop this application, the database url+key is required as a local environment variable
+    - Add the url+key as DB_URL to .bashrc
+ - If locally developing, an unzipped copy of the directory should be stored in the local repo
+    - The location for the directory should be in src/IngredientIdentifier/
