@@ -12,10 +12,12 @@ DB_URL = str(os.getenv("DB_URL")).replace("postgres", "postgresql")
 
 # Read in local copies of data from USDA
 usda_data = pd.read_csv(
-    Path("src/IngredientIdentifier/FoodData_Central_csv_2024-10-31/branded_food.csv")
+    Path("src/IngredientIdentifier/FoodData_Central_csv_2024-10-31/branded_food.csv"),
+    low_memory=False,
 )
 food_data = pd.read_csv(
-    Path("src/IngredientIdentifier/FoodData_Central_csv_2024-10-31/food.csv")
+    Path("src/IngredientIdentifier/FoodData_Central_csv_2024-10-31/food.csv"),
+    low_memory=False,
 )
 
 # Clean, Parse, and Merge usda_data

@@ -52,6 +52,9 @@ EMPTY_TAGS = [
     "USED FOR",
     "USED AS A",
     "USED",
+    " *",
+    "* ",
+    ".",
 ]
 
 
@@ -113,7 +116,7 @@ def ingredient_parser(
     normed_str: str = (
         str(ingredients_tags_removed)
         .upper()
-        .replace(" PERCENT", "%")
+        .replace(" PERCENT", " %")
         .replace("PERCENT", "%")
     )
 
@@ -125,13 +128,13 @@ def ingredient_parser(
     for tag in comma_tags:
         normed_str = normed_str.replace(tag, ",")
 
-    # Remove pieces describes in CONTAINS_REMOVAL.TXT
+    # Remove additive tags
     removed_tags: str = additive_tag_removal(normed_str)
 
     return [
         str(i).strip().rstrip(".")
         for i in removed_tags.split(",")
-        if str(i).strip().rstrip(".") != ""
+        if str(i).strip().rstrip(".") not in {"", " "}
     ]
 
 
@@ -162,4 +165,4 @@ def clean_parse_merge(branded: pd.DataFrame, food: pd.DataFrame) -> pd.DataFrame
     # Normalize 'description'
     usda.loc[:, "description"] = usda.loc[:, "description"].apply(str.upper)
 
-    return usda
+    return usda[["brand_owner", "brand_name", "ingredient_list", "description"]]
