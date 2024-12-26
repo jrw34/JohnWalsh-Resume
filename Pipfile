@@ -12,6 +12,8 @@ plotly = "*"
 pyspark = "*"
 streamlit = "*"
 setuptools = "*"
+sqlalchemy = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 ruff = "0.8.2"
