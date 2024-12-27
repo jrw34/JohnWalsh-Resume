@@ -23,7 +23,6 @@ food_data = pd.read_csv(
 # Clean, Parse, and Merge usda_data
 cleaned_and_parsed = clean_parse_merge(usda_data, food_data)
 
-print(cleaned_and_parsed.head())
 # Create engine to connect to PostgreSQL DB
 engine = create_engine(DB_URL)
 
