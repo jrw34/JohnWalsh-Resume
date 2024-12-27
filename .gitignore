@@ -2,4 +2,4 @@
 /src/IngredientIdentifier/FoodData_Central_csv_2024-10-31/*
 
 # mypy cache
-.mypy_chache/*
+.mypy_cache/*
