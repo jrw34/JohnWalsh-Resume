@@ -15,6 +15,8 @@ reference_markdown: str = """
 
                 [pySpark Text Classification](#pyspark-text-classification-model)
 
+                [Code Samples (SQL + Python)](#sample-code)
+
                 [How I Built This](#how-i-built-this)
 
                 [About Me + Contact Info](#about-me)
@@ -164,9 +166,11 @@ capstone_display_perfect_matches: str = """
             generated proved worth the effort. One issue encountered during the developement of the visualization was
             dealing with queries returning large result sets.
 
-            This issue was resolved with a rendition of an alternating sequence, utilized to compute the horizontal
-            distribution of nodes on the graph. Ensuring spacing would account for various items per brand whilst remaining
-            independent of the number of nodes on the graph.
+            This issue was resolved by implementing linear node spacing for cases where parent nodes have multiple children.
+
+            It is also important to note that the current implementation of ingredient identifier only returns perfact description matches
+            for the user-input, the previous version allowed all similar items to be returned from the user-query, but due to data limitations of my free tier
+            streamlit web-deployment, control measures were enacted to ensure the web app does not crash due to memory constraints.
             """
 
 capstone_data_source: str = """
@@ -251,6 +255,111 @@ pyspark_data_source: str = """
 
         """
 
+sample_sql_code: str = """
+            This SQL was written during my fellowship at The Data Incubator
+
+            While I no longer have access the the database, this code contain a fun blend of
+            Common Table Expressions (CTEs) and a join. The code employs Bayes' Theorem to determine the conditional likelihood
+            of restaurant violations per cuisine type occuring at restaurants in a city.
+
+            Once these condtional likelihoods are computed, the following ratio is determined:
+                condtional probability for each violation type by cuisine / unconditional probability of the violation across the entire population
+
+            This ratio allows us to determine which cuisine types are responsible for notable portions of each violation type
+
+            Then query returns the top 20 ratios for each (cuisine, violation, cuisine_violation_count)
+
+
+            **Bayes' Theorem:**
+            $$
+            P(x\\in A|x\\in B)=\\frac{P(x\in B|x\in A)\\cdot P(x\\in A)}{P(x\\in B)}
+            $$
+
+            **Note:**
+
+                Let x be a Restaurant Violation
+
+                Let B be the set of all Violations By Cuisine Code
+
+                Let A be the set of all violations by Violation Type/Description
+
+            **Given a PostgreSQL Database with
+            the following tables:**
+
+                violations : with columns [violcode, violdesc]
+
+                cuisine    : with columns [cuisinecode, cuisinecode]
+
+
+            ```
+            CREATE TEMP TABLE relevant_violations AS
+            SELECT violcode, violdesc, enddate
+            FROM violations
+            WHERE enddate >= '2014-01-01'::date --this ensures consistency amongst violcode/violdesc pairs
+
+            WITH
+                conditional_freqs AS (
+                SELECT A.violcode, A.cuisinecode, (A.Count1 * 1.0) / B.Count2 AS conditional_violation_freq
+
+                    FROM (
+
+                    SELECT violationcode, cuisinecode, COUNT(*) as Count1
+                    FROM relevant_violations
+                    GROUP BY violcode, cuisinecode
+                    HAVING COUNT(violcode) > 100
+                    )
+                        AS A
+
+                    INNER JOIN (
+
+                    SELECT  cuisinecode, COUNT(*) AS Count2
+                    FROM relevant_violations
+                    GROUP BY cuisinecode
+                    HAVING COUNT(violcode) > 100
+                    )
+                        AS B
+
+                    ON A.cuisinecode = B.cuisinecode,
+
+
+                unconditional_freqs AS (
+                    SELECT violcode, (COUNT(violcode) * 1.0)/ COUNT(*)) AS unconditional_violation_freq
+                    FROM relevant_violations
+                    WHERE violcode IS NOT NULL
+                    GROUP BY violcode
+                ),
+
+                violcode_counts AS (
+                    SELECT violcode, COUNT(violcode) as viol_count, cuisinecode
+                    FROM relevant_violations
+                    GROUP BY violcode, cuisinecode
+                )
+
+            SELECT cuisinecode, violdesc, conditional_violation_freq/unconditional_violation_freq as ratio, viol_count
+
+            FROM relevant_violations
+            JOIN
+                conditional_freqs ON
+                    relevant_violations.violcode = conditional_freqs.violcode
+            JOIN
+                unconditional_freqs ON
+                    relevant_violations.violcode = unconditional_freqs.violcode
+            JOIN
+                violcode_counts ON
+                    relevant_violations.violcode = violcode_counts.violcode
+
+            JOIN
+                cuisine ON
+                    cuisine.cuisinecode = conditional_freqs.cuisinecode
+                    AND
+                    cuisine.cuisinecode = violcode_counts.cuisinecode
+
+            ORDER BY ratio DESC
+            LIMIT 20;
+
+            ```
+"""
+
 how_i_built_this: str = """
         To see the python code used to build this app, click the github logo in the top right corner.
 
@@ -308,6 +417,7 @@ class SectionDescriptions(TypedDict):
     tutoring: str
     chem_lab: str
     pyspark: Dict[str, str]
+    sample_sql_code: str
     about_me: str
     how_i_built_this: str
 
@@ -337,6 +447,7 @@ section_descriptions: SectionDescriptions = {
         "input_guide": pyspark_input_guide,
         "data_source": pyspark_data_source,
     },
+    "sample_sql_code": sample_sql_code,
     "about_me": about_me_description,
     "how_i_built_this": how_i_built_this,
 }

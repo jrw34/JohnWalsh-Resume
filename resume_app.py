@@ -1,4 +1,9 @@
-"""Streamlit Application Containing An Interactive Resume."""
+"""
+Streamlit Application Containing An Interactive Resume.
+
+If running locally, the current solution requires changing the db_web = True -> False
+under __name__ == "__main__" at the bottom of the file
+"""
 
 import streamlit as st
 from pathlib import Path
@@ -42,238 +47,274 @@ def cache_ingredient_counts(query_item: str, db_web: bool):  # noqa: ANN201, D10
     return get_ingredient_counts(query_item, db_web=db_web)
 
 
-# Create title
-st.title("John Walsh Resume")
+def app(db_web: bool = True) -> None:
+    """
+    Run the streamlit app for local dev and web deployment.
 
-# Download Resume PDF button
-with open(Path("src/resume_data/John_Walsh_Resume.pdf"), "rb") as file:
-    btn = st.download_button(
-        label="Click Here to Download My Tradtional Resume as a PDF",
-        file_name="John_Walsh_Resume.pdf",
-        data=file,
-        mime="application/pdf",
-    )
+    Input:
+    -----
+    db_web : Boolean that controls if deployment should use local vairables or streamlit secrets for db connection
 
-# Reference Section and Headshot container
-with st.container():
-    col_1, col_2 = st.columns([2, 1])
-    col_1.markdown(
-        """ ##### Welcome to my streamlit app! The blue underlined text can be clicked to easily navigate the page. You can also use the 'Sections' sidebar."""
-    )
-    col_1.markdown(section_descriptions["experience_section"])
-    col_2.image("src/resume_data/imgs/headshot.png")
+    """
+    # Create title
+    st.title("John Walsh Resume")
 
-# SciTec
-st.subheader("SciTec")
-st.markdown(section_descriptions["scitec_description"])
-
-# The Data Incubator
-st.subheader("The Data Incubator (TDI)")
-st.markdown(section_descriptions["tdi_overview"])
-# Capstone Project
-st.subheader("TDI Capstone Project: Ingredient Identifier")
-# Display images from capstone project
-if st.button("Data and Motivation"):
-    st.write(section_descriptions["capstone"]["data_and_motivation"])
-
-if st.button("Cleaning and Processing the Data"):
-    st.write(section_descriptions["capstone"]["cleaning_and_processing"])
-
-if st.button("Database Management and Interface"):
-    st.write(section_descriptions["capstone"]["database_management_and_interface"])
-
-if st.button("Display Perfect Matches"):
-    st.write(section_descriptions["capstone"]["display_perfect_matches"])
-
-capstone_toggler = st.toggle("Activate Ingredient Identifier")
-# Click toggle bar to activate Ingredient Identifier
-if capstone_toggler:
-    # Query DB for item input into text box
-    query_item_input = st.text_input("What Food Item are you interested in?")
-    if query_item_input:
-        # Count and Display Ingredients for queried item
-        ingredient_counts, total_ingredients = cache_ingredient_counts(
-            query_item_input,
-            db_web=True,  # change to False for local dev
-        )
-        # Plot ingredient_counts
-        st.write(
-            f"There are {total_ingredients} different ingredients in items matching: {query_item_input}"
-        )
-        st.write(
-            "To see the most common ingredients, click 'Fullscreen' at the top right corner of the figure to expand."
-        )
-        st.plotly_chart(
-            plot_ingredient_counts(ingredient_counts, query_item_input),
-            use_container_width=True,
-        )
-        st.snow()  # Add snowfall for fun
-    else:
-        st.write(
-            "To guide your search, enter the food item of interest in the text box above."
+    # Download Resume PDF button
+    with open(Path("src/resume_data/John_Walsh_Resume.pdf"), "rb") as file:
+        st.download_button(
+            label="Click Here to Download My Tradtional Resume as a PDF",
+            file_name="John_Walsh_Resume.pdf",
+            data=file,
+            mime="application/pdf",
         )
 
-    # Construct Plotly HDAG based on user input
-    if query_item_input:
-        # Create submit button to query for priotize/avoid ingredients
-        with st.form("Ingredients to Prioritze and Avoid"):
-            # Get Prioritized Ingredients
-            priorize: list[str] = st.multiselect(
-                "What ingredients do you want to prioritize in your query?",
-                ingredient_counts.keys(),  # Include ingredients for selection
+    # Reference Section and Headshot container
+    with st.container():
+        col_1, col_2 = st.columns([2, 1])
+        col_1.markdown(
+            """ ##### Welcome to my streamlit app! The blue underlined text can be clicked to easily navigate the page. You can also use the 'Sections' sidebar."""
+        )
+        col_1.markdown(section_descriptions["experience_section"])
+        col_2.image("src/resume_data/imgs/headshot.png")
+
+    # SciTec
+    st.subheader("SciTec")
+    st.markdown(section_descriptions["scitec_description"])
+
+    # The Data Incubator
+    st.subheader("The Data Incubator (TDI)")
+    st.markdown(section_descriptions["tdi_overview"])
+    # Capstone Project
+    st.subheader("TDI Capstone Project: Ingredient Identifier")
+    # Display images from capstone project
+    if st.button("Data and Motivation"):
+        st.write(section_descriptions["capstone"]["data_and_motivation"])
+
+    if st.button("Cleaning and Processing the Data"):
+        st.write(section_descriptions["capstone"]["cleaning_and_processing"])
+
+    if st.button("Database Management and Interface"):
+        st.write(section_descriptions["capstone"]["database_management_and_interface"])
+
+    if st.button("Display Perfect Matches"):
+        st.write(section_descriptions["capstone"]["display_perfect_matches"])
+
+    capstone_toggler = st.toggle("Activate Ingredient Identifier")
+    # Click toggle bar to activate Ingredient Identifier
+    if capstone_toggler:
+        # Query DB for item input into text box
+        query_item_input = st.text_input("What Food Item are you interested in?")
+        if query_item_input:
+            # Count and Display Ingredients for queried item
+            ingredient_counts, total_ingredients = cache_ingredient_counts(
+                query_item_input,
+                db_web=db_web,  # change to False for local dev
             )
-            avoid: list[str] = st.multiselect(
-                "What ingredients do you want to avoid in your query?",
-                ingredient_counts.keys(),  # Include ingredients for selection
-            )
-
-            submitted_query = st.form_submit_button("Submit Query")
-
-            if submitted_query:
-                user_queried_data = user_query(
-                    query_item_input,
-                    priorize,
-                    avoid,
-                    db_web=True,  # change to False for local dev
-                )
-                hdag_figure = hdag_plot(
-                    user_queried_data, "brand_owner", "description", "ingredient_list"
-                )
-                hdag_chart = st.plotly_chart(hdag_figure)
-            else:
-                st.write("Hit 'Submit Query' to search the USDA's data for your item.")
-
+            # Plot ingredient_counts
             st.write(
-                "If the resultant visualization is too large, try adding more items to prioritize/avoid"
+                f"There are {total_ingredients} different ingredients in items matching: {query_item_input}"
+            )
+            st.write(
+                "To see the most common ingredients, click 'Fullscreen' at the top right corner of the figure to expand."
+            )
+            st.plotly_chart(
+                plot_ingredient_counts(ingredient_counts, query_item_input),
+                use_container_width=True,
+            )
+            st.snow()  # Add snowfall for fun
+        else:
+            st.write(
+                "To guide your search, enter the food item of interest in the text box above."
             )
 
+        # Construct Plotly HDAG based on user input
+        if query_item_input:
+            # Create submit button to query for priotize/avoid ingredients
+            with st.form("Ingredients to Prioritze and Avoid"):
+                # Get Prioritized Ingredients
+                priorize: list[str] = st.multiselect(
+                    "What ingredients do you want to prioritize in your query?",
+                    ingredient_counts.keys(),  # Include ingredients for selection
+                )
+                avoid: list[str] = st.multiselect(
+                    "What ingredients do you want to avoid in your query?",
+                    ingredient_counts.keys(),  # Include ingredients for selection
+                )
 
-st.write(section_descriptions["capstone"]["data_source"])
+                submitted_query = st.form_submit_button("Submit Query")
 
-# Internship
-st.markdown(section_descriptions["intern_overview"])
-st.write(section_descriptions["thesis"])
-st.markdown("""
-        ##### Click 'Build Graph' to build the visualization.
-        ###### Then click each data point to view the corresponding information.
-        """)
-# Generate animated_intern_graph
-intern_graph = animated_intern_graph(intern_positions)
-intern_plot = st.plotly_chart(intern_graph, on_select="rerun")
-try:
-    # Use x,y coords of click data to get description from intern_data_map
-    st.html(
-        """<b> """
-        + intern_data_map[intern_plot.selection["points"][0]["x"]][  # type: ignore[attr-defined]
-            intern_plot.selection["points"][0]["y"]  # type: ignore[attr-defined]
-        ]
-        + """<b>"""
-    )  # type: ignore[attr-defined]
-except IndexError:
-    st.write("Click on a Data Point to view the information.")
-else:
-    st.write("")
+                if submitted_query:
+                    user_queried_data = user_query(
+                        query_item_input,
+                        priorize,
+                        avoid,
+                        db_web=db_web,  # change to False for local dev
+                    )
+                    hdag_figure = hdag_plot(
+                        user_queried_data,
+                        "brand_owner",
+                        "description",
+                        "ingredient_list",
+                    )
+                    # Display HDAG from query
+                    st.plotly_chart(hdag_figure)
+                else:
+                    st.write(
+                        "Hit 'Submit Query' to search the USDA's data for your item."
+                    )
 
-# Embed thesis hyperlink
-st.link_button(
-    "View Paper: Spatiotemporal Determinants of Football Stadium Incidents",
-    "https://github.com/jrw34/ThesisJW_PDF/blob/main/JW_Thesis_pdf2.pdf",
-)
+                st.write(
+                    "If the resultant visualization is too large, try adding more items to prioritize/avoid"
+                )
 
-# Education graph
-st.header("Education")
+    st.write(section_descriptions["capstone"]["data_source"])
 
-# Generate education_treemap
-edu_graph = education_treemap(
-    tdi_data,
-    fau_data,
-    color_1="#94E3FE",
-    color_2="#FFC677",
-    sector_bg_color="#D4E3FE",
-    sector_font_color="#1A0A53",
-)
-st.plotly_chart(edu_graph)
+    # Internship
+    st.markdown(section_descriptions["intern_overview"])
+    st.write(section_descriptions["thesis"])
+    st.markdown("""
+            ##### Click 'Build Graph' to build the visualization.
+            ###### Then click each data point to view the corresponding information.
+            """)
+    # Generate animated_intern_graph
+    intern_graph = animated_intern_graph(intern_positions)
+    intern_plot = st.plotly_chart(intern_graph, on_select="rerun")
+    try:
+        # Use x,y coords of click data to get description from intern_data_map
+        st.html(
+            """<b> """
+            + intern_data_map[intern_plot.selection["points"][0]["x"]][  # type: ignore[attr-defined]
+                intern_plot.selection["points"][0]["y"]  # type: ignore[attr-defined]
+            ]
+            + """<b>"""
+        )  # type: ignore[attr-defined]
+    except IndexError:
+        st.write("Click on a Data Point to view the information.")
+    else:
+        st.write("")
 
-# Describe Tutoring Role and Timeframe
-st.subheader("Mathematics Tutor at Florida Atlantic University")
-st.write(section_descriptions["tutoring"])
+    # Embed thesis hyperlink
+    st.link_button(
+        "View Paper: Spatiotemporal Determinants of Football Stadium Incidents",
+        "https://github.com/jrw34/ThesisJW_PDF/blob/main/JW_Thesis_pdf2.pdf",
+    )
 
-# Describe Volunteer Role at Computational Chemistry Lab
-st.subheader("Computational Chemistry Laboratory Volunteer")
-st.write(section_descriptions["chem_lab"])
+    # Education graph
+    st.header("Education")
 
-# Skills graph
-st.header("Skills")
-st.write(
-    "Click within the inner two circles to toggle view, center click to toggle back"
-)
+    # Generate education_treemap
+    edu_graph = education_treemap(
+        tdi_data,
+        fau_data,
+        color_1="#94E3FE",
+        color_2="#FFC677",
+        sector_bg_color="#D4E3FE",
+        sector_font_color="#1A0A53",
+    )
+    st.plotly_chart(edu_graph)
 
-# Generate skills_graph
-skill_graph = skills_graph(skills_df)
-st.plotly_chart(skill_graph)
+    # Describe Tutoring Role and Timeframe
+    st.subheader("Mathematics Tutor at Florida Atlantic University")
+    st.write(section_descriptions["tutoring"])
 
-# Embed emotion classification spark model
-st.header("pySpark Text Classification Model")
-st.subheader("A simple emotion classifier built using spark")
+    # Describe Volunteer Role at Computational Chemistry Lab
+    st.subheader("Computational Chemistry Laboratory Volunteer")
+    st.write(section_descriptions["chem_lab"])
 
-st.write(section_descriptions["pyspark"]["build_description"])
+    # Skills graph
+    st.header("Skills")
+    st.write(
+        "Click within the inner two circles to toggle view, center click to toggle back"
+    )
 
-# Checkbox to explain model performance
-model_perf_check = st.checkbox("Model Performance")
-if model_perf_check:
-    st.write(section_descriptions["pyspark"]["model_performance"])
+    # Generate skills_graph
+    skill_graph = skills_graph(skills_df)
+    st.plotly_chart(skill_graph)
 
-# Checkbox to explain hyperparameter tuning
-hyperparam_check = st.checkbox("Hyperparameter Tuning")
-if hyperparam_check:
-    st.write(section_descriptions["pyspark"]["hyperparams"])
+    # Embed emotion classification spark model
+    st.header("pySpark Text Classification Model")
+    st.subheader("A simple emotion classifier built using spark")
 
-# Checkbox to show some examples of the model input/output
-examples_check = st.checkbox("Examples")
-if examples_check:
-    st.write(section_descriptions["pyspark"]["example_outputs"])
+    st.write(section_descriptions["pyspark"]["build_description"])
 
-# Describe input format
-st.write(section_descriptions["pyspark"]["input_guide"])
+    # Checkbox to explain model performance
+    model_perf_check = st.checkbox("Model Performance")
+    if model_perf_check:
+        st.write(section_descriptions["pyspark"]["model_performance"])
 
-# Load sqlContext
-sqlContext = create_spark_instance()
+    # Checkbox to explain hyperparameter tuning
+    hyperparam_check = st.checkbox("Hyperparameter Tuning")
+    if hyperparam_check:
+        st.write(section_descriptions["pyspark"]["hyperparams"])
 
-# Load lrModel
-lrModel = load_lrModel("src/SparkModel/lrModel_emotions.model")
+    # Checkbox to show some examples of the model input/output
+    examples_check = st.checkbox("Examples")
+    if examples_check:
+        st.write(section_descriptions["pyspark"]["example_outputs"])
 
-# Load fitPipeline
-fitPipeline = load_pipeline("src/SparkModel/lrModel_transformation_pipe")
+    # Describe input format
+    st.write(section_descriptions["pyspark"]["input_guide"])
 
-# User input
-input_text = st.text_input("Input sentence here")
+    # Load sqlContext
+    sqlContext = create_spark_instance()
 
-if input_text:
-    st.write(f"User Input: {input_text}")
+    # Load lrModel
+    lrModel = load_lrModel("src/SparkModel/lrModel_emotions.model")
 
-    # Classify_text
-    classifier_pred = classify_input(input_text, sqlContext, fitPipeline, lrModel)
-    st.write(f"Did your text describe {classifier_pred}?")
+    # Load fitPipeline
+    fitPipeline = load_pipeline("src/SparkModel/lrModel_transformation_pipe")
 
-st.write(section_descriptions["pyspark"]["data_source"])
+    # User input
+    input_text = st.text_input("Input sentence here")
 
-# Create sidebar
-with st.sidebar:
-    st.markdown(section_descriptions["reference_section"])
+    if input_text:
+        st.write(f"User Input: {input_text}")
 
-# Add section about process of building the site
-st.header("How I built this")
-st.write(section_descriptions["how_i_built_this"])
+        # Classify_text
+        classifier_pred = classify_input(input_text, sqlContext, fitPipeline, lrModel)
+        st.write(f"Did your text describe {classifier_pred}?")
 
-# Add About Me
-st.header("About Me")
-st.write(section_descriptions["about_me"])
-# Add Contact Info
-st.subheader("Contact Info")
-st.write("""
-        email: johnrwalsh34@gmail.com
-        """)
-st.link_button(
-    "Find me on LinkedIn",
-    "https://www.linkedin.com/in/john-walsh-90b0a82a0/",
-)
+    st.write(section_descriptions["pyspark"]["data_source"])
+
+    # Add Sample Code Section
+    st.header("Sample Code")
+    st.subheader("Bayesian Likelihood in SQL")
+    # create checkbox to display sample sql code
+    sample_sql_check = st.checkbox("SQL Sample")
+    if sample_sql_check:
+        st.markdown(section_descriptions["sample_sql_code"])
+
+    st.subheader("Python Code")
+    st.write(
+        "Follow the link to see the IngredientIdentifier code embedded in this application!"
+    )
+    st.link_button(
+        "JohnWalsh-Resume/src/IngredientIdentifier/",
+        "https://github.com/jrw34/JohnWalsh-Resume/tree/main/src/IngredientIdentifier",
+    )
+    # Create sidebar
+    with st.sidebar:
+        st.markdown(section_descriptions["reference_section"])
+
+    # Add section about process of building the site
+    st.header("How I built this")
+    st.write(section_descriptions["how_i_built_this"])
+
+    # Add About Me
+    st.header("About Me")
+    st.write(section_descriptions["about_me"])
+    # Add Contact Info
+    st.subheader("Contact Info")
+    st.write("""
+            email: johnrwalsh34@gmail.com
+            """)
+    st.link_button(
+        "Find me on LinkedIn",
+        "https://www.linkedin.com/in/john-walsh-90b0a82a0/",
+    )
+
+
+if __name__ == "__main__":
+    # Change This to False for local dev
+    ## Make sure to revert back to true before deployment
+    app(db_web=False)
