@@ -256,18 +256,18 @@ pyspark_data_source: str = """
         """
 
 sample_sql_code: str = """
-            This SQL was written during my fellowship at The Data Incubator
+            This SQL was written during my fellowship at The Data Incubator, the flavor is PostgreSQL.
 
-            While I no longer have access the the database, this code contain a fun blend of
-            Common Table Expressions (CTEs) and a join. The code employs Bayes' Theorem to determine the conditional likelihood
+            While I no longer have access the the database, this code contains a fun blend of
+            Common Table Expressions (CTEs) and joins. The code employs Bayes' Theorem to determine the conditional likelihood
             of restaurant violations per cuisine type occuring at restaurants in a city.
 
             Once these condtional likelihoods are computed, the following ratio is determined:
-                condtional probability for each violation type by cuisine / unconditional probability of the violation across the entire population
+                condtional probability for each violation type by cuisine / unconditional probability of the violation across all cuisines
 
-            This ratio allows us to determine which cuisine types are responsible for notable portions of each violation type
+            This ratio allows us to determine which cuisine types are responsible for notable portions of each violation type.
 
-            Then query returns the top 20 ratios for each (cuisine, violation, cuisine_violation_count)
+            The query returns the top 20 ratio tuples of the form (cuisine type, violation description, violation ratio, cuisine_violation_count)
 
 
             **Bayes' Theorem:**
