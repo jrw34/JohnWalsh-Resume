@@ -31,6 +31,9 @@ pipenv run mypy .
 pipenv run streamlit run src/resume_app.py
 ```
 
+#### Note About Running Locally
+##### When locally running the application, it is important that the proper version of Java is used. In order to ensure the Text Classification model properly configures the Spark environment, openjdk@17 should be used.
+
 ### Ingredient Identifier
  - CSV was downloaded from https://fdc.nal.usda.gov/download-datasets
  - File downloaded was "Full Download of All Data Types"

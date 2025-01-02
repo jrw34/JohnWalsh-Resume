@@ -315,6 +315,6 @@ def app(db_web: bool = True) -> None:
 
 
 if __name__ == "__main__":
-    # Change This to False for local dev
-    ## Make sure to revert back to true before deployment
+    # This enables local developement
+    ## run command 'streamlit run resume_app.py"
     app(db_web=False)
