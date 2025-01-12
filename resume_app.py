@@ -317,4 +317,4 @@ def app(db_web: bool = True) -> None:
 if __name__ == "__main__":
     # This enables local developement
     ## run command 'streamlit run resume_app.py"
-    app(db_web=False)
+    app(db_web=True)
