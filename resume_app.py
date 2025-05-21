@@ -237,6 +237,10 @@ def app(db_web: bool = True) -> None:
 
     st.write(section_descriptions["pyspark"]["build_description"])
 
+    # Model Overview and Diagram
+    st.subheader("Model Diagram")
+    st.image("src/resume_data/imgs/spark_model_diagram.png")
+
     # Checkbox to explain model performance
     model_perf_check = st.checkbox("Model Performance")
     if model_perf_check:
