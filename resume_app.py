@@ -31,21 +31,6 @@ from src.utils.AppDataStructs.section_descriptions import (
     section_descriptions,
 )  # Text body data
 
-from src.IngredientIdentifier.ingredient_utils.db_tools import (  # type: ignore[attr-defined]
-    get_ingredient_counts,
-    user_query,
-)
-from src.IngredientIdentifier.ingredient_utils.ingredient_plots import (  # Plot query output
-    plot_ingredient_counts,
-    hdag_plot,
-)
-
-
-# Create memory cache for ingredient counts, disable ruff checks for decorated function
-@st.cache_data
-def cache_ingredient_counts(query_item: str, db_web: bool):  # noqa: ANN201, D103
-    return get_ingredient_counts(query_item, db_web=db_web)
-
 
 def app(db_web: bool = True) -> None:
     """
@@ -89,6 +74,8 @@ def app(db_web: bool = True) -> None:
     # Display images from capstone project
     if st.button("Data and Motivation"):
         st.write(section_descriptions["capstone"]["data_and_motivation"])
+        st.subheader("Data Source")
+        st.write(section_descriptions["capstone"]["data_source"])
 
     if st.button("Cleaning and Processing the Data"):
         st.write(section_descriptions["capstone"]["cleaning_and_processing"])
@@ -99,75 +86,23 @@ def app(db_web: bool = True) -> None:
     if st.button("Display Perfect Matches"):
         st.write(section_descriptions["capstone"]["display_perfect_matches"])
 
-    capstone_toggler = st.toggle("Activate Ingredient Identifier")
+    capstone_toggler = st.toggle("View Ingredient Identifier")
     # Click toggle bar to activate Ingredient Identifier
     if capstone_toggler:
-        # Query DB for item input into text box
-        query_item_input = st.text_input("What Food Item are you interested in?")
-        if query_item_input:
-            # Count and Display Ingredients for queried item
-            ingredient_counts, total_ingredients = cache_ingredient_counts(
-                query_item_input,
-                db_web=db_web,  # change to False for local dev
-            )
-            # Plot ingredient_counts
-            st.write(
-                f"There are {total_ingredients} different ingredients in items matching: {query_item_input}"
-            )
-            st.write(
-                "To see the most common ingredients, click 'Fullscreen' at the top right corner of the figure to expand."
-            )
-            st.plotly_chart(
-                plot_ingredient_counts(ingredient_counts, query_item_input),
-                use_container_width=True,
-            )
-            st.snow()  # Add snowfall for fun
-        else:
-            st.write(
-                "To guide your search, enter the food item of interest in the text box above."
-            )
+        # Display Capstone Project Images
+        st.subheader("Input and Ingredient Display")
+        st.image("src/resume_data/imgs/cap_proj_1.png")
+        st.subheader("Query Selection")
+        st.image("src/resume_data/imgs/cap_proj_2.png")
+        st.subheader("Processed Query Visual Output")
+        st.image("src/resume_data/imgs/cap_proj_3.png")
 
-        # Construct Plotly HDAG based on user input
-        if query_item_input:
-            # Create submit button to query for priotize/avoid ingredients
-            with st.form("Ingredients to Prioritze and Avoid"):
-                # Get Prioritized Ingredients
-                priorize: list[str] = st.multiselect(
-                    "What ingredients do you want to prioritize in your query?",
-                    ingredient_counts.keys(),  # Include ingredients for selection
-                )
-                avoid: list[str] = st.multiselect(
-                    "What ingredients do you want to avoid in your query?",
-                    ingredient_counts.keys(),  # Include ingredients for selection
-                )
+        st.write("""
+                 The updated code for this project can be found by following the link in the 'Python code' section of this app.
 
-                submitted_query = st.form_submit_button("Submit Query")
-
-                if submitted_query:
-                    user_queried_data = user_query(
-                        query_item_input,
-                        priorize,
-                        avoid,
-                        db_web=db_web,  # change to False for local dev
-                    )
-                    hdag_figure = hdag_plot(
-                        user_queried_data,
-                        "brand_owner",
-                        "description",
-                        "ingredient_list",
-                    )
-                    # Display HDAG from query
-                    st.plotly_chart(hdag_figure)
-                else:
-                    st.write(
-                        "Hit 'Submit Query' to search the USDA's data for your item."
-                    )
-
-                st.write(
-                    "If the resultant visualization is too large, try adding more items to prioritize/avoid"
-                )
-
-    st.write(section_descriptions["capstone"]["data_source"])
+                 The database has been shutdown due to avoiding costs associated with running it through AIVEN. Thus, the pictures are provided to
+                 display what the application looked like while it was still operational.
+                 """)
 
     # Internship
     st.markdown(section_descriptions["intern_overview"])

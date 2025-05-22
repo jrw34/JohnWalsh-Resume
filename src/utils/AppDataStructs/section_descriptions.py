@@ -174,7 +174,6 @@ capstone_display_perfect_matches: str = """
             """
 
 capstone_data_source: str = """
-    Data Source For Ingredient Identifier:
 
     U.S. Department of Agriculture, Agricultural Research Service.
     FoodData Central, 2023. fdc.nal.usda.gov.
